@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-start" style="height: 100vh;">
+    <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
+        <div class="row">
+            <div class="col-md-7 order-md-2 align-self-top" style="margin-top: 20px;">
+                <h2 class="featurette-heading fw-normal lh-1">Comment for post: {{ comment.post }}</h2><br><br><br>
+                <p class="lead">Comment text: {{ comment.content }}</p><br><br><br>
+
+                <small class="text-body-secondary">User: {{ comment.user }}</small><br>
+                <small class="text-body-secondary">Date create: {{ comment.create_at }}</small>
+
+            </div>
+
+            <div class="col-md-5 order-md-1">
+                {% if user.profile_pictures %}
+                    <img src="{{ user.profile_pictures.url }}" class="mr-4 rounded" width="300" height="300" alt="Profile Image">
+                {% else %}
+                    <img src="{% static 'img/default_user_image.png' %}" class="mr-4 rounded" width="300" height="300" alt="Default Profile Image">
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+{% endblock %}

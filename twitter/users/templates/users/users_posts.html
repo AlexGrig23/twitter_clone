@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+    <div class="d-flex justify-content-center align-items-start" style="height: 100vh;">
+        <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
+            <a href="/" class="d-flex align-items-center p-3 link-body-emphasis text-decoration-none border-bottom">
+               <svg class="bi me-2" width="400" height="40"><use xlink:href="#bootstrap"></use></svg>
+                   <span class="fs-5 fw-semibold">
+                      <img src="{% if user.profile_pictures %}{{ user.profile_pictures.url }}{% else %}{% static 'img/default_user_image.png' %}{% endif %}" alt="User Profile" width="32" height="32" class="rounded-circle">
+                      POSTS LIST FOR {{ user.username.upper }}
+                    </span>
+
+            </a>
+            <div class="list-group list-group-flush border-bottom scrollarea">
+                {% for post in posts %}
+
+                    <a href="{% url 'view_post' post.id user.id %}" class="list-group-item list-group-item-action py-3 lh-sm">
+
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+
+                            <strong class="mb-1"> Post made by: {{ user.username.upper }}</strong>
+
+                            <small class="text-body-secondary">{{ post.create_at  }} </small>
+
+                        </div>
+                        <div class="d-flex mb-1 small align-items-center">
+
+                            {% if post.profile_picture %}
+                                <img src="{{ post.profile_picture.url }}" class="mr-4 rounded" width="64" height="64" alt="Profile Image">
+                            {% else %}
+                                <img src="{% static 'img/default_profile_image.png' %}" class="mr-4 rounded" width="64" height="64" alt="Default Profile Image">
+                            {% endif %}
+                            <div class="d-flex flex-column justify-content-center" style="margin-left: 20px;">
+                                {{ post.content }}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+
+                                <button id="view-button-{{ post.id }}" type="button" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                                    </svg>
+                                    View post
+                                </button>
+
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script>
+    {% for comment in comments %}
+        document.getElementById("view-button-{{ user.id }}").addEventListener("click", function() {
+            window.location.href = "{% url 'view_post' post.id user.id %}";
+        });
+    {% endfor %}
+</script>
+
+{% endblock %}

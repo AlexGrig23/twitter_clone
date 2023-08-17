@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<body>
+
+ <div class="d-flex justify-content-center align-items-start" style="min-height: 100vh;">
+        <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
+            <a href="/" class="d-flex align-items-center p-3 link-body-emphasis text-decoration-none border-bottom">
+               <svg class="bi me-2" width="400" height="40"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-5 fw-semibold">USERS LIST</span>
+            </a>
+            <div class="list-group list-group-flush border-bottom scrollarea">
+                {% for user in users %}
+                    <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">User name: {{ user.username }}</strong>
+                            <small class="text-body-secondary">Date joined: {{ user.date_joined }}</small>
+                        </div>
+
+                        <div class="col-10 mb-1 small d-flex align-items-center">
+                            {% if user.profile_pictures %}
+                                <img src="{{ user.profile_pictures.url }}" class="mr-4 rounded" width="64" height="64" alt="Profile Image">
+                            {% else %}
+                                <img src="{% static 'img/default_user_image.png' %}" class="mr-4 rounded" width="64" height="64" alt="Default Profile Image">
+                            {% endif %}
+
+                            <div style="margin-left: 20px;">
+                                User email: {{ user.email }}
+                            </div>
+                        </div>
+
+                        <!-- Кнопки в правом нижнем углу -->
+                        <div class="d-flex justify-content-end">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+
+                                <button id="view-button-{{ user.id }}" type="button" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                      <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path>
+                                      <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+                                    </svg>
+                                            User detail
+                                </button>
+
+                                <button id="comment-button-{{ user.id }}" type="button" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left-dots-fill" viewBox="0 0 16 16">
+                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path>
+                                    </svg>
+                                        User posts
+                                </button>
+
+
+
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+    {% for user in users %}
+        document.getElementById("view-button-{{ user.id }}").addEventListener("click", function() {
+            window.location.href = "{% url 'user_detail' user.id %}";
+        });
+
+        document.getElementById("comment-button-{{ user.id }}").addEventListener("click", function() {
+            window.location.href = "{% url 'users_posts' user.id %}";
+        });
+
+
+
+    {% endfor %}
+</script>
+
+{% endblock %}

@@ -1,0 +1,186 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head><script src="{% static 'js/color-modes.js' %}"></script>
+
+
+
+    <title>Mini twitter</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/album/">
+
+    <style>
+            .nav-link.link-effect {
+                color: #000000; /* Цвет по умолчанию */
+                transition: color 0.3s; /* Плавное изменение цвета */
+            }
+
+            .nav-link.link-effect:hover {
+                color: ##ffffff; /* Цвет при наведении */
+            }
+        </style>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+
+  </head>
+  <body>
+      <!-- Хедер -->
+      <header class="p-3 bg-primary text-white">
+          <!-- Здесь ваш контент для хедера -->
+
+          <div class="d-flex flex-wrap align-items-center justify-content-center text-center">
+                <a href="/" class="d-flex align-items-center ms-5 mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                  <img src="{% static 'img/default_logo.png' %}" alt="Profile pictures" class="mr-4 rounded" width="32" height="32">
+                </a>
+
+                <ul class="nav col-12 col-lg-auto mb-2 mb-md-0 me-auto">
+                  <li class="ms-4"><a href="{% url 'posts_list' %}" class="nav-link px-2 link-effect">Posts list</a></li>
+                  <li ><a href="{% url 'users_list' %}" class="nav-link px-2 link-effect">Users list</a></li>
+                </ul>
+
+              <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+              </form>
+
+              <div class="dropdown text-end">
+                <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if user.profile_pictures %}
+                        <img src="{{ user.profile_pictures.url }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                    {% else %}
+                        <img src="{% static 'img/default_user_image.png' %}" alt="mdo" width="32" height="32" class="rounded-circle" >
+                    {% endif %}
+
+                </a>
+                <ul class="dropdown-menu text-small">
+                  <li><a class="dropdown-item" href="{% url 'add_user' %}">New user</a></li>
+
+                  <li><a class="dropdown-item" href="{% url 'user_detail' user.id %}">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Coming soon</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Coming soon</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+      </header>
+
+
+
+      <!-- Основной контейнер с сайтбаром и контентом -->
+      <div class="container-fluid mt-4">
+          <div class="row">
+              <!-- Сайтбар слева -->
+              <div class="col-md-3">
+                  <div class="p-3 bg-light">
+                      <!-- Здесь ваш контент для сайтбара -->
+
+                      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                        <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                        <span class="fs-4">Start Page</span>
+                      </a>
+                      <hr>
+                      <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                          <a href="{% url 'user_detail' user.id %}" class="nav-link link-body-emphasis">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                            Profile
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'add_post' user.id %}" class="nav-link link-body-emphasis">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                            Create Post
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'add_comment' %}" class="nav-link link-body-emphasis">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+                            Create Comment
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{% url 'add_user' %}" class="nav-link link-body-emphasis">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+                            Create User
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="nav-link link-body-emphasis">
+                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+                            Comming soon
+                          </a>
+                        </li>
+                      </ul>
+                      <hr>
+
+
+
+                  </div>
+              </div>
+
+              <!-- Контент справа от сайтбара с отступом -->
+              <div class="col-md-9">
+                  <div class="p-0" style="margin-right: 200px;">
+                      <!-- Здесь ваш контент с отступом -->
+                    <main>
+
+                      {% block content %}
+
+                      {% endblock %}
+
+
+                    </main>
+
+
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Футер -->
+
+
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-body-secondary">© 2023 Company, Inc</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+    </ul>
+  </footer>
+</div>
+
+
+
+      <!-- Подключение скриптов Bootstrap -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  </body>
+</html>
+<script>
+
+  const menuLinks = document.querySelectorAll('.nav-link');
+
+
+  menuLinks.forEach(link => {
+    link.addEventListener('mouseover', () => {
+
+      menuLinks.forEach(link => {
+        link.classList.remove('active');
+      });
+
+
+      link.classList.add('active');
+    });
+  });
+</script>

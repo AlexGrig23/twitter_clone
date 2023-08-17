@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-start" style="height: 100vh;">
+    <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
+        <div class="row">
+            <div class="col-md-7 order-md-2 align-self-top" style="margin-top: 100px;">
+                <h2 class="featurette-heading fw-normal lh-1">{{ user.username }}</h2>
+                <p class="lead">{{ user.email }}</p>
+
+                <small class="text-body-secondary">{{ user.create_at }}</small>
+                <small class="text-body-secondary">{{ user.date_joined }}</small>
+            </div>
+            <div class="col-md-5 order-md-1">
+                {% if user.profile_pictures %}
+
+                    <img src="{{ user.profile_pictures.url }}" class="mr-4 rounded" width="300" height="300" alt="Profile Image">
+
+                {% else %}
+
+                    <img src="{% static 'img/default_user_image.png' %}" class="mr-4 rounded" width="300" height="300" alt="Default Profile Image">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
