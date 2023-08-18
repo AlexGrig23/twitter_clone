@@ -10,4 +10,5 @@ urlpatterns = [
     path('users/users-posts/<int:user_id>', users_posts, name='users_posts')
 
 
+
 ]

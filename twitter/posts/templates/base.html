@@ -55,7 +55,8 @@
                 <ul class="dropdown-menu text-small">
                   <li><a class="dropdown-item" href="{% url 'add_user' %}">New user</a></li>
 
-                  <li><a class="dropdown-item" href="{% url 'user_detail' user.id %}">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+
                   <li><a class="dropdown-item" href="#">Coming soon</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="#">Coming soon</a></li>
@@ -82,14 +83,9 @@
                       </a>
                       <hr>
                       <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                          <a href="{% url 'user_detail' user.id %}" class="nav-link link-body-emphasis">
-                            <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                            Profile
-                          </a>
-                        </li>
+
                         <li>
-                          <a href="{% url 'add_post' user.id %}" class="nav-link link-body-emphasis">
+                          <a href="{% url 'add_post'  %}" class="nav-link link-body-emphasis">
                             <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
                             Create Post
                           </a>
@@ -114,6 +110,7 @@
                         </li>
                       </ul>
                       <hr>
+
 
 
 

@@ -9,7 +9,7 @@ urlpatterns = [
     path('post/<int:post_id>/<int:user_id>/', view_post, name="view_post"),
     path('post/<int:user_id>/<int:post_id>/<int:comment_id>/', comment_detail, name="comment_detail"),
     path('post/add-comment/', add_comment, name="add_comment"),
-    path('post/add-post/<int:user_id>/', add_post, name="add_post"),
+    path('post/add-post/', add_post, name="add_post"),
 
 
 

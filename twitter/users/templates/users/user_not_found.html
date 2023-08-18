@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-start" style="height: 100vh;">
+    <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
+        <div class="row">
+            <div class="col-md-7 order-md-2 align-self-top" style="margin-top: 100px;">
+                <h2 class="featurette-heading fw-normal lh-1">User not found</h2>
+
+
+                <small class="text-body-secondary"></small>
+                <small class="text-body-secondary"></small>
+            </div>
+            <div class="col-md-5 order-md-1">
+
+                    <img src="{% static 'img/default_not_found.png' %}" class="mr-4 rounded" width="300" height="300" alt="Default Profile Image">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}

@@ -37,14 +37,15 @@ def view_post(request, post_id, user_id):
     return render(request, 'posts/view_post.html', context)
 
 
-def add_post(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def add_post(request):
+
+
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             print(form.cleaned_data)
             post = Post.objects.create(**form.cleaned_data)
-            return redirect('view_post', post_id=post.pk, user_id=user.pk)
+            return redirect('view_post', post_id=post.pk, user_id=post.user.pk)
 
     else:
         form = PostForm()
