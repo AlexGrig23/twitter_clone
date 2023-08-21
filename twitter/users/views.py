@@ -3,7 +3,8 @@ from users.models import User
 from posts.models import Post
 from django.shortcuts import render, get_object_or_404, redirect
 from users.forms import UserForm
-
+from django.core.files.base import ContentFile
+from django.core.files.images import ImageFile
 
 def index(request):
     users = User.objects.all()
@@ -18,22 +19,31 @@ def user_detail(request, user_id):
     return render(request, "users/user_detail.html", context)
 
 
-
-
-
-
-
 def add_user(request):
+
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
+
         if form.is_valid():
-            print(form.cleaned_data)
-            user = User.objects.create(**form.cleaned_data)
+            user_data = form.cleaned_data
+
+            if 'profile_pictures' in request.FILES:
+                user_data['profile_pictures'] = request.FILES['profile_pictures']
+            else:
+
+                with open('static/img/default_user_image.png', 'rb') as f:
+                    content = ContentFile(f.read())
+                    user_data['profile_pictures'] = ImageFile(content, 'default_user_image.png')
+
+            user = User.objects.create(**user_data)
             return redirect('user_detail', user_id=user.pk)
 
     else:
         form = UserForm()
-        return render(request, 'users/create_user.html', {'form': form})
+
+    return render(request, 'users/create_user.html', {'form': form})
+
+
 
 def users_list(request, username=None):
     if username:

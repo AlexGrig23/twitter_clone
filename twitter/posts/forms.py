@@ -12,5 +12,5 @@ class PostForm(forms.Form):
 
     user = forms.ModelChoiceField(queryset=User.objects.all())
     title = forms.CharField(max_length=128)
-    profile_picture = forms.ImageField()
-    content = forms.CharField(max_length=200, widget=forms.Textarea)
+    profile_picture = forms.ImageField(required=False)
+    content = forms.CharField(max_length=200, widget=forms.Textarea, required=False)

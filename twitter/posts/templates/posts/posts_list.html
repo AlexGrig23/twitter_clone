@@ -68,7 +68,7 @@
 <script>
     {% for post in posts %}
         document.getElementById("view-button-{{ post.id }}").addEventListener("click", function() {
-            window.location.href = "{% url 'view_post' post.id user.id %}";
+            window.location.href = "{% url 'view_post' post.id post.user.id %}";
         });
 
         document.getElementById("comment-button-{{ post.id }}").addEventListener("click", function() {
