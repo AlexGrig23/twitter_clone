@@ -35,7 +35,7 @@ def add_user(request):
                     content = ContentFile(f.read())
                     user_data['profile_pictures'] = ImageFile(content, 'default_user_image.png')
 
-            user = User.objects.create(**user_data)
+            user = form.save()
             return redirect('user_detail', user_id=user.pk)
 
     else:
