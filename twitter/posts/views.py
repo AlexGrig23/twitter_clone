@@ -47,19 +47,19 @@ def add_post(request):
             post_data = form.cleaned_data
 
             if 'profile_picture' in request.FILES:
-                post_data['profile_picture'] = request.FILES['profile_pictures']
+                post_data['profile_picture'] = request.FILES['profile_picture']
             else:
 
                 with open('static/img/default_cover_image.png', 'rb') as f:
                     content = ContentFile(f.read())
                     post_data['profile_picture'] = ImageFile(content, 'default_cover_image.png')
 
-            post = Post.objects.create(**form.cleaned_data)
+            post = form.save()
             return redirect('view_post', post_id=post.pk, user_id=post.user.pk)
 
     else:
         form = PostForm()
-        return render(request, 'posts/create_post.html', {'form': form})
+    return render(request, 'posts/create_post.html', {'form': form})
 
 
 
@@ -78,9 +78,9 @@ def add_comment(request):
         form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             print(form.cleaned_data)
-            comment = Comment.objects.create(**form.cleaned_data)
+            comment = form.save()
             return redirect('posts_list') # разобраться с редиректом когда хочу перейти на comment_detail выбивает ошибку не знаю где найти .
 
     else:
         form = CommentForm()
-        return render(request, 'posts/create_comment.html', {'form': form})
+    return render(request, 'posts/create_comment.html', {'form': form})
