@@ -6,10 +6,10 @@
     <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
         <div class="row">
             <div class="col-md-7 order-md-2 align-self-top" style="margin-top: 20px;">
-                <h2 class="featurette-heading fw-normal lh-1">Comment for post: {{ comment.post }}</h2><br><br><br>
+                <h2 class="featurette-heading fw-normal lh-1">Comment for post: {{ comment.post.title }}</h2><br><br><br>
                 <p class="lead">Comment text: {{ comment.content }}</p><br><br><br>
 
-                <small class="text-body-secondary">User: {{ comment.user }}</small><br>
+                <small class="text-body-secondary">User: {{ user.username }}</small><br>
                 <small class="text-body-secondary">Date create: {{ comment.create_at }}</small>
 
             </div>

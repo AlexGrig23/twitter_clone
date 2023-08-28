@@ -5,66 +5,65 @@ from django.shortcuts import render, get_object_or_404, redirect
 from users.forms import UserForm
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
-
-def index(request):
-    users = User.objects.all()
-    context = {'users': users, 'title': 'List of users'}
-    return render(request, 'users/users_list.html', context)
-
-
-def user_detail(request, user_id):
-
-    user = get_object_or_404(User, pk=user_id)
-    context = {'user': user}
-    return render(request, "users/user_detail.html", context)
-
-
-def add_user(request):
-
-    if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            user_data = form.cleaned_data
-
-            if 'profile_pictures' in request.FILES:
-                user_data['profile_pictures'] = request.FILES['profile_pictures']
-            else:
-
-                with open('static/img/default_user_image.png', 'rb') as f:
-                    content = ContentFile(f.read())
-                    user_data['profile_pictures'] = ImageFile(content, 'default_user_image.png')
-
-            user = User.objects.create(**user_data)
-            return redirect('user_detail', user_id=user.pk)
-
-    else:
-        form = UserForm()
-
-    return render(request, 'users/create_user.html', {'form': form})
+from django.views.generic import ListView, DetailView, CreateView
 
 
 
-def users_list(request, username=None):
-    if username:
-        users = User.objects.filter(user__username=username)
-        username = f"Lists of users by {username}"
+class UserDetailView(DetailView):
+    model = User
+    context_object_name = 'user'
+    template_name = "users/user_detail.html"
+    pk_url_kwarg = 'user_id'
 
-    else:
-        users = User.objects.all()
-        username = "List of posts"
 
-    context = {'users': users, 'username': username}
-    return render(request, 'users/users_list.html', context)
+class UserCreateView(CreateView):
+    model = User
+    form_class = UserForm
+    template_name = 'users/create_user.html'
 
-def users_posts(request,user_id):
-    user = User.objects.get(pk=user_id)
-    posts = Post.objects.filter(user=user)
 
-    context = {
-        'posts': posts,
-        'user': user,
-        'title': 'List of posts'
-    }
-    return render(request, 'users/users_posts.html', context)
+    def form_valid(self, form):
+        user = form.save()
 
+        if 'profile_pictures' in self.request.FILES:
+            user.profile_pictures = self.request.FILES['profile_pictures']
+
+        else:
+
+            with open('static/img/default_user_image.png', 'rb') as f:
+                content = ContentFile(f.read())
+                user.profile_pictures.save('default_user_image.png', content)
+
+        user.save()
+        return redirect('user_detail', user_id=user.pk)
+
+
+
+class UserListView(ListView):
+    model = User
+    context_object_name = 'users'
+    template_name = 'users/users_list.html'
+    extra_context = {"title": 'USERS LIST'}
+
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        if username:
+            return User.objects.filter(username=username)
+        return User.objects.all()
+
+
+class UserPostsDetailView(DetailView):
+    model = User
+    context_object_name = 'user'
+    template_name = 'users/users_posts.html'
+    pk_url_kwarg = 'user_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        user = User.objects.get(pk=user_id)
+        posts = Post.objects.filter(user=user)
+
+        context['posts'] = posts
+        context['title'] = 'List of posts'
+        return context

@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import User
+from django.urls import reverse
 
 
 class Post(models.Model):
@@ -21,3 +22,6 @@ class Comment(models.Model):
 
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse("posts_list")

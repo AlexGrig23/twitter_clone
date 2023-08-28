@@ -14,7 +14,7 @@
 
             </a>
             <div class="list-group list-group-flush border-bottom scrollarea">
-                {% for post in posts %}
+                {% for post in user.post_set.all %}
 
                     <a href="{% url 'view_post' post.id user.id %}" class="list-group-item list-group-item-action py-3 lh-sm">
 

@@ -4,83 +4,111 @@ from posts.models import Post, Comment, User
 from posts.forms import CommentForm, PostForm
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
-
-def posts_list(request, username=None):
-
-    if username:
-        posts = Post.objects.filter(user__username=username)
-        title = f"Lists of posts by {username}"
-
-    else:
-        posts = Post.objects.all()
-        title = "List of posts"
-
-    context = {'posts': posts, 'title': title }
-    return render(request, 'posts/posts_list.html', context)
+from django.views.generic import ListView, DetailView, CreateView
 
 
-def comments_list(request, post_id):
-    post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.filter(post=post)
 
-    context = \
-        {'comments': comments,
-         'post': post,
-         'title': 'List of comments'}
-    return render(request, 'posts/comments_list.html', context)
+class PostListView(ListView):
+    model = Post
+    context_object_name = 'posts'
+    template_name = 'posts/posts_list.html'
+    extra_context = {'title': 'POSTS LIST'}
 
-def view_post(request, post_id, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    post = get_object_or_404(Post, pk=post_id)
-    context = {'post': post, 'user': user}
-
-    return render(request, 'posts/view_post.html', context)
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        if username:
+            return Post.objects.filter(username=username)
+        return Post.objects.all()
 
 
-def add_post(request):
+class CommentListDetailView(DetailView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'posts/comments_list.html'
+    pk_url_kwarg = 'post_id'
 
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.object
+        comments = Comment.objects.filter(post=post)
 
-        if form.is_valid():
-            print(form.cleaned_data)
-            post_data = form.cleaned_data
+        context['comments'] = comments
+        context['title'] = 'COMMENTS LIST'
+        return context
 
-            if 'profile_picture' in request.FILES:
-                post_data['profile_picture'] = request.FILES['profile_pictures']
-            else:
 
-                with open('static/img/default_cover_image.png', 'rb') as f:
-                    content = ContentFile(f.read())
-                    post_data['profile_picture'] = ImageFile(content, 'default_cover_image.png')
+class PostDetailView(DetailView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'posts/view_post.html'
+    pk_url_kwarg = 'post_id'
 
-            post = Post.objects.create(**form.cleaned_data)
-            return redirect('view_post', post_id=post.pk, user_id=post.user.pk)
+    def get_object(self, queryset=None):
+        post_id = self.kwargs.get('post_id')
+        user_id = self.kwargs.get('user_id')  # user_id будет вторым параметром в URL
+        return get_object_or_404(Post, pk=post_id, user__pk=user_id)
 
-    else:
-        form = PostForm()
-        return render(request, 'posts/create_post.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, pk=user_id)
+        context['user'] = user
+        return context
 
 
 
 
-def comment_detail(request, user_id, post_id, comment_id):
-    user = get_object_or_404(User, pk=user_id)
-    post = get_object_or_404(Post, pk=post_id)
-    comment = get_object_or_404(Comment, pk=comment_id)
-    context = {'user': user, 'post': post, 'comment': comment}
-    return render(request, "posts/comment_detail.html", context)
+class PostCreateView(CreateView):
+    model = User
+    form_class = PostForm
+    template_name = 'posts/create_post.html'
+
+
+    def form_valid(self, form):
+        post = form.save()
+
+        if 'profile_picture' in self.request.FILES:
+            post.profile_picture = self.request.FILES['profile_picture']
+
+        else:
+
+            with open('static/img/default_user_image.png', 'rb') as f:
+                content = ContentFile(f.read())
+                post.profile_picture.save('default_user_image.png', content)
+
+        post.save()
+        return redirect('view_post', post_id=post.pk, user_id=post.user.pk)
 
 
 
-def add_comment(request):
-    if request.method == 'POST':
-        form = CommentForm(request.POST, request.FILES)
-        if form.is_valid():
-            print(form.cleaned_data)
-            comment = Comment.objects.create(**form.cleaned_data)
-            return redirect('posts_list') # разобраться с редиректом когда хочу перейти на comment_detail выбивает ошибку не знаю где найти .
 
-    else:
-        form = CommentForm()
-        return render(request, 'posts/create_comment.html', {'form': form})
+class CommentDetailView(DetailView):
+    model = Comment
+    context_object_name = 'post'
+    template_name = 'posts/comment_detail.html'
+
+    def get_object(self, queryset=None):
+        user_id = self.kwargs.get('user_id')
+        post_id = self.kwargs.get('post_id')
+        comment_id = self.kwargs.get('comment_id')
+        return get_object_or_404(Comment, pk=comment_id, post__user__pk=user_id, post__pk=post_id)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = self.kwargs.get('user_id')
+        post_id = self.kwargs.get('post_id')
+        comment_id = self.kwargs.get('comment_id')
+        user = get_object_or_404(User, pk=user_id)
+        post = get_object_or_404(Post, pk=post_id)
+        comment = get_object_or_404(Comment, pk=comment_id)
+        context['user'] = user
+        context['post'] = post
+        context['comment'] = comment
+        return context
+
+
+
+class CommentCreateView(CreateView):
+    model = Comment
+    form = CommentForm
+    template_name = 'posts/create_comment.html'
+    fields = ['user', 'post', 'content']

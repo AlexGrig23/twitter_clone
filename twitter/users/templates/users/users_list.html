@@ -9,10 +9,10 @@
         <div class="d-flex flex-column align-items-stretch bg-body-tertiary" style="width: 1000px;">
             <a href="/" class="d-flex align-items-center p-3 link-body-emphasis text-decoration-none border-bottom">
                <svg class="bi me-2" width="400" height="40"><use xlink:href="#bootstrap"></use></svg>
-                <span class="fs-5 fw-semibold">USERS LIST</span>
+                <span class="fs-5 fw-semibold">{{ title }}</span>
             </a>
             <div class="list-group list-group-flush border-bottom scrollarea">
-                {% for user in users %}
+                {% for user in object_list %}
                     <a href="#" class="list-group-item list-group-item-action py-3 lh-sm">
                         <div class="d-flex w-100 align-items-center justify-content-between">
                             <strong class="mb-1">User name: {{ user.username }}</strong>
