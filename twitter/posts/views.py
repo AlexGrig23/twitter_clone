@@ -37,11 +37,13 @@ class CommentListDetailView(DetailView):
         return context
 
 
+
 class PostDetailView(DetailView):
     model = Post
     context_object_name = 'post'
     template_name = 'posts/view_post.html'
     pk_url_kwarg = 'post_id'
+
 
     def get_object(self, queryset=None):
         post_id = self.kwargs.get('post_id')
@@ -54,6 +56,7 @@ class PostDetailView(DetailView):
         user = get_object_or_404(User, pk=user_id)
         context['user'] = user
         return context
+
 
 
 
@@ -78,6 +81,7 @@ class PostCreateView(CreateView):
 
         post.save()
         return redirect('view_post', post_id=post.pk, user_id=post.user.pk)
+
 
 
 
@@ -112,3 +116,4 @@ class CommentCreateView(CreateView):
     form = CommentForm
     template_name = 'posts/create_comment.html'
     fields = ['user', 'post', 'content']
+

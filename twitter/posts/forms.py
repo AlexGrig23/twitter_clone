@@ -1,5 +1,6 @@
 from django import forms
-from posts.models import Post, Comment, User
+from posts.models import Post, Comment
+
 
 class CommentForm(forms.ModelForm):
 
@@ -11,6 +12,7 @@ class CommentForm(forms.ModelForm):
             "post": forms.Select(attrs={'class': 'form-control'}),
             "content": forms.Textarea(attrs={'class': 'form-control'})
         }
+
 
 
 class PostForm(forms.ModelForm):

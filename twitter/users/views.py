@@ -5,7 +5,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from users.forms import UserForm
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
+
 from django.views.generic import ListView, DetailView, CreateView
+
 
 
 
