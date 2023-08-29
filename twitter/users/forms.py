@@ -12,3 +12,4 @@ class UserForm(forms.ModelForm):
             "email": forms.EmailInput(attrs={'class': 'form-control'}),
             "profile_pictures": forms.FileInput(attrs={'class': 'form-control'})
         }
+

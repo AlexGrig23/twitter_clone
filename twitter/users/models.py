@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class User(models.Model):
@@ -8,3 +9,7 @@ class User(models.Model):
 
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    def get_absolute_url(self):
+        return reverse("user_detail", kwargs={'pk': self.pk})
